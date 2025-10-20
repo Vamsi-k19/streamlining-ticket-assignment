@@ -1,83 +1,77 @@
-Streamlining Ticket Assignment for Efficient Operations
+# 🚀 Automated Ticket Assignment for ABC Corporation (ServiceNow)
 
-Team ID: 160664
+**Team ID:** 160664
 
-This repository contains the documentation, configuration blueprints, and code snippets related to the implementation of an automated ticket routing solution within ServiceNow for ABC Corporation.
+This repository documents the implementation, configuration blueprints, and code snippets for the **automated ticket routing solution** for Operations Tickets within ABC Corporation's ServiceNow instance.
 
-🚀 Project Overview
+The objective was to transition from manual ticket triage to an intelligent, criteria-based assignment system, significantly boosting operational efficiency and reducing Mean Time To Resolution (MTTR).
 
-The objective of this project was to transition ABC Corporation's support operations from manual ticket triage to an intelligent, automated assignment system. By leveraging ServiceNow's Flow Designer, the solution instantly routes incoming Operations Tickets to the correct support group (e.g., Certificate or Platform) based on ticket criteria, significantly reducing resolution times and improving overall team efficiency.
+---
 
-🎯 Goals
+## 🎯 Key Project Goals
 
-Automation: Develop an automated, criteria-based ticket distribution mechanism in ServiceNow.
+| Goal | Description | Status |
+| :--- | :--- | :--- |
+| **Automation** | Develop an automated, criteria-based distribution mechanism in ServiceNow Flow Designer. | ✅ Complete |
+| **Efficiency** | Instantly route tickets to the correct support group (`Certificate Group`, `Platform Group`). | ✅ Complete |
+| **Security** | Implement role-based ACLs to govern and secure the core assignment configuration. | ✅ Complete |
+| **Optimization** | Optimize resource utilization within the support department by reducing manual triage overhead. | ✅ Complete |
 
-Efficiency: Associate tickets with the correct support groups immediately upon creation to minimize resolution delays.
+---
 
-Security: Implement role-based ACLs to govern who can modify the core assignment logic.
+## 🛠️ Technology Stack & Skills
 
-Optimization: Optimize resource utilization within the support department.
+This solution is built entirely on the **ServiceNow Platform**.
 
-🛠️ Technology Stack & Skills
+| Component | Purpose |
+| :--- | :--- |
+| **ServiceNow** | Platform hosting the solution. |
+| **Flow Designer** | Core tool for building the decision-making and assignment automation logic (two dedicated Flows). |
+| **ACLs (Access Control Lists)** | Ensures security and governance over the custom table configuration data. |
+| **Custom Table** | `u_operations_related` table used for centralized ticket data and assignment configuration. |
 
-This solution is built entirely within the ServiceNow platform, utilizing the following core components and skills:
+---
 
-Component
+## 📦 Implementation Components
 
-Purpose
+### 1. Automation Logic (ServiceNow Flow Designer)
 
-ServiceNow
+The assignment process is managed by **two separate, dedicated Flows**, each triggered by specific criteria on the ticket's **`Issue`** field. Both flows use the **`create or update a record`** trigger on the **`Operations related`** table.
 
-Platform hosting the solution.
+#### **Flow 1: "Regarding Certificate"**
+* **Trigger Condition:** `Issue` is **`Regrading Certificates`**.
+* **Action:** Updates the record's **`Assigned to group`** field to **`Certificates`**.
 
-Flow Designer
+#### **Flow 2: "Regarding Platform"**
+* **Trigger Conditions (OR Logic):**
+    * `Issue` is **`Unable to login to platform`**
+    * `Issue` is **`404 Error`**
+    * `Issue` is **`Regrading User expired`**
+* **Action:** Updates the record's **`Assigned to group`** field to **`Platform`**.
 
-Used to build the core decision-making and assignment automation logic.
+### 2. Data Structure and Configuration
 
-ACLs (Access Control Lists)
+| Component | Detail | Purpose |
+| :--- | :--- | :--- |
+| **Custom Table** | `u_operations_related` | The table where the Flows are triggered and the `Issue` field holds the routing criteria. |
+| **Assignment Groups**| `Certificate Group`, `Platform Group` | The two primary support teams. |
+| **Custom Roles** | `Certification_role`, `Platform_role` | Used for defining user access and security permissions. |
 
-Ensures security and governance over the assignment configuration data.
+### 3. Security and Governance (ACLs)
 
-User and Group Management
+To maintain configuration integrity, record-level security was applied to the `u_operations_related` table.
 
-Used to define support teams (Certificate Group, Platform Group) and access roles.
+* **Objective:** Restrict who can modify the routing configuration data.
+* **Implementation:** A record-level **write ACL** is applied, granting access to modify the assignment mapping to the **`Certification_role`, `Platform_role`** roles and System Administrators.
 
-Custom Tables
+---
 
-Used for centralized, low-code assignment mapping configuration.
+## 📂 Repository Structure
 
-📦 Key Implementation Components
-
-1. Data Structure and Roles
-
-Component
-
-Detail
-
-Custom Table
-
-u_operations_related.
-
-Assignment Groups
-
-Certificate Group and Platform Group.
-
-Custom Roles
-
-Certification_role, Platform_role, and a 'Support Manager' role for ACL governance.
-
-2. Security and Governance (ACLs)
-
-Objective: Restrict who can modify the u_operations_related table, preventing unauthorized changes to routing rules.
-
-Implementation: A record-level write ACL is applied to the u_operatoins_related table, granting access only to the 'Support Manager' role and System Administrators.
-
-3. Automation Logic (Flow Designer)
-
-Trigger: The Flow is triggered upon creation or update of an Operations Ticket record.
-
-Logic:
-
-Look Up Records: The flow performs a lookup against the u_operations_related table, using the ticket's Category or Issue Type as the key criteria.
-
-Assignment: An Update Record action is executed to set the ticket's Assignment Group field to the group retrieved from the lookup result.
+| Directory/File | Description |
+| :--- | :--- |
+| `/documentation` | Project charter, requirements, design documents, and final sign-off documentation. |
+| `/configuration` | XML/Update Sets for the custom table schema (`u_operations_related`) and related data policies. |
+| `/blueprints` | Screenshots and configuration steps for the Flow Designer logic and custom ACLs. |
+| `/code` | Any server-side scripts (Business Rules, Script Includes) used to support this solution (if applicable). |
+| `README.md` | This overview file. |

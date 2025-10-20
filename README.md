@@ -66,12 +66,3 @@ To maintain configuration integrity, record-level security was applied to the `u
 
 ---
 
-## 📂 Repository Structure
-
-| Directory/File | Description |
-| :--- | :--- |
-| `/documentation` | Project charter, requirements, design documents, and final sign-off documentation. |
-| `/configuration` | XML/Update Sets for the custom table schema (`u_operations_related`) and related data policies. |
-| `/blueprints` | Screenshots and configuration steps for the Flow Designer logic and custom ACLs. |
-| `/code` | Any server-side scripts (Business Rules, Script Includes) used to support this solution (if applicable). |
-| `README.md` | This overview file. |
